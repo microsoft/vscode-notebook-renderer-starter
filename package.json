@@ -1,0 +1,74 @@
+{
+  "name": "vscode-notebook-renderer-starter",
+  "displayName": "vscode-notebook-renderer-starter",
+  "description": "Notebook renderer starter template",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.44.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension/extension.js",
+  "enableProposedApi": true,
+  "contributes": {
+    "notebookOutputRenderer": [
+      {
+        "viewType": "sample-notebook-renderer",
+        "displayName": "Sample Notebook Renderer",
+        "mimeTypes": [
+          "application/json"
+        ]
+      }
+    ],
+    "notebookProvider": [
+      {
+        "viewType": "sample-notebook-renderer",
+        "displayName": "CPU Profile Notebook",
+        "selector": [
+          {
+            "filenamePattern": "*.sample"
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "npm run compile:extension && npm run compile:client",
+    "compile:extension": "tsc -b ",
+    "compile:client": "webpack --info-verbosity verbose --mode production",
+    "lint": "eslint src --ext ts",
+    "watch": "concurrently -r \"npm:watch:*\"",
+    "watch:extension": "webpack --info-verbosity verbose --mode development --watch",
+    "watch:client": "tsc -b --watch",
+    "dev": "concurrently -r npm:watch:client webpack-dev-server",
+    "pretest": "npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js",
+    "updatetypes": "cd src/types && vscode-dts dev && vscode-dts master"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^12.11.7",
+    "@types/webpack-env": "^1.15.2",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "concurrently": "^5.1.0",
+    "css-loader": "^3.5.2",
+    "eslint": "^6.8.0",
+    "fork-ts-checker-webpack-plugin": "^4.1.3",
+    "glob": "^7.1.6",
+    "mocha": "^7.0.1",
+    "style-loader": "^1.1.4",
+    "ts-loader": "^7.0.1",
+    "typescript": "^3.7.5",
+    "vscode-test": "^1.3.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}
