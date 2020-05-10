@@ -14,7 +14,7 @@
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"env": {
-				// "RENDERER_USE_WDS_PORT": "8111",
+				"RENDERER_USE_WDS_PORT": "8111",
 			},
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
