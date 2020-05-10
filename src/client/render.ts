@@ -9,7 +9,7 @@ import * as style from './style.css';
 
 // This function is called to render your contents.
 export function render(container: HTMLElement, mimeType: string, data: any) {
-  // Format the JSON and insert it as <pre><code>{ ... }</code></pre
+  // Format the JSON and insert it as <pre><code>{ ... }</code></pre>
   const pre = document.createElement('pre');
   pre.classList.add(style.json);
   const code = document.createElement('code');

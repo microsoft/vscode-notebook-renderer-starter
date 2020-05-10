@@ -4,22 +4,26 @@
 
 import { viewType, renderCallback } from '../common/constants';
 import { render } from './render';
+import errorOverlay from 'vscode-notebook-error-overlay';
 
-const renderTag = (tag: HTMLScriptElement) => {
-  let container: HTMLElement;
+// Fucntion to render your contents in a single tag, calls the `render()`
+// function from render.ts. Also catches and displays any thrown errors.
+const renderTag = (tag: HTMLScriptElement) =>
+  errorOverlay.wrap(tag.parentElement, () => {
+    let container: HTMLElement;
 
-  // Create an element to render in, or reuse a previous element.
-  if (tag.nextElementSibling instanceof HTMLElement) {
-    container = tag.nextElementSibling;
-    container.innerHTML = '';
-  } else {
-    container = document.createElement('div');
-    tag.parentNode?.insertBefore(container, tag.nextSibling);
-  }
+    // Create an element to render in, or reuse a previous element.
+    if (tag.nextElementSibling instanceof HTMLElement) {
+      container = tag.nextElementSibling;
+      container.innerHTML = '';
+    } else {
+      container = document.createElement('div');
+      tag.parentNode?.insertBefore(container, tag.nextSibling);
+    }
 
-  const mimeType = tag.dataset.mimeType as string;
-  render(container, mimeType, JSON.parse(tag.innerHTML));
-};
+    const mimeType = tag.dataset.mimeType as string;
+    render(container, mimeType, JSON.parse(tag.innerHTML));
+  });
 
 const renderAllTags = () => {
   const nodeList = document.querySelectorAll(`script[type="renderer/${viewType}"]`);
