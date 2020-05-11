@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 		),
 
 		// todo: either flesh this out or remove from final version:
-		vscode.notebook.registerNotebookProvider(
+		vscode.notebook.registerNotebookContentProvider(
 			viewType, new SampleProvider()
 		)
 	);

@@ -4,27 +4,27 @@ import * as vscode from 'vscode';
  * An ultra-minimal sample provider that lets the user type in JSON, and then
  * outputs JSON cells. Doesn't read files or save anything.
  */
-export class SampleProvider implements vscode.NotebookProvider {
+export class SampleProvider implements vscode.NotebookContentProvider {
+  public readonly onDidChangeNotebook = new vscode.EventEmitter<vscode.NotebookDocumentEditEvent>()
+    .event;
+
   /**
    * @inheritdoc
    */
-  public async resolveNotebook(editor: vscode.NotebookEditor): Promise<void> {
-    editor.document.languages = ['json'];
-
-    // Insert the package.json contents as some sample JSON:
-    await editor.edit((edit) => {
-      edit.insert(
-        0,
-        JSON.stringify(require('../../package.json')),
-        'json',
-        vscode.CellKind.Code,
-        [],
+  public async openNotebook(): Promise<vscode.NotebookData> {
+    return {
+      cells: [
         {
-          editable: true,
-          runnable: true,
+          cellKind: vscode.CellKind.Code,
+          source: JSON.stringify(require('../../package.json')),
+          language: 'json',
+          outputs: [],
+          metadata: {},
         },
-      );
-    });
+      ],
+      languages: ['json'],
+      metadata: {},
+    };
   }
 
   /**
@@ -60,7 +60,14 @@ export class SampleProvider implements vscode.NotebookProvider {
   /**
    * @inheritdoc
    */
-  public async save(_document: vscode.NotebookDocument): Promise<boolean> {
-    return Promise.resolve(true);
+  public async saveNotebook(): Promise<void> {
+    return Promise.resolve(); // not implemented
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async saveNotebookAs(): Promise<void> {
+    return Promise.resolve(); // not implemented
   }
 }
