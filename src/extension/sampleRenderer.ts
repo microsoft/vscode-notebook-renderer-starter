@@ -12,8 +12,8 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
   constructor(private readonly context: vscode.ExtensionContext) {
     // Set preloads to a list of scripts you want VS Code to load before your
     // renderer is ready. Here, we load the compiled Webpack bundle in 'release'
-    // mode and load from the webpack-dev-server in development.
-
+    // mode and load from the webpack-dev-server in development, which provides
+    // hot reloading for easy development.
     const webpackDevServerPort = process.env.RENDERER_USE_WDS_PORT;
     if (webpackDevServerPort && context.extensionMode !== vscode.ExtensionMode.Release) {
       this.preloads.push(vscode.Uri.parse(`http://localhost:${webpackDevServerPort}/index.js`));

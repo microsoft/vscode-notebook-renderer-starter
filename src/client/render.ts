@@ -10,6 +10,7 @@ import * as style from './style.css';
 // This function is called to render your contents.
 export function render(container: HTMLElement, mimeType: string, data: any) {
   // Format the JSON and insert it as <pre><code>{ ... }</code></pre>
+  // Replace this with your custom code!
   const pre = document.createElement('pre');
   pre.classList.add(style.json);
   const code = document.createElement('code');
@@ -18,7 +19,9 @@ export function render(container: HTMLElement, mimeType: string, data: any) {
   container.appendChild(pre);
 }
 
-module.hot?.addDisposeHandler(() => {
-  // In development, this will be called before the renderer is reloaded. You
-  // can use this to clean up or stash any state.
-});
+if (module.hot) {
+  module.hot.addDisposeHandler(() => {
+    // In development, this will be called before the renderer is reloaded. You
+    // can use this to clean up or stash any state.
+  });
+}
