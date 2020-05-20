@@ -4,7 +4,9 @@ import * as vscode from 'vscode';
  * An ultra-minimal sample provider that lets the user type in JSON, and then
  * outputs JSON cells. Doesn't read files or save anything.
  */
-export class SampleProvider implements vscode.NotebookContentProvider {
+export class SampleProvider implements vscode.NotebookContentProvider, vscode.NotebookKernel {
+  label: string = 'CPU Profile Notebook';
+
   public readonly onDidChangeNotebook = new vscode.EventEmitter<vscode.NotebookDocumentEditEvent>()
     .event;
 
@@ -25,6 +27,18 @@ export class SampleProvider implements vscode.NotebookContentProvider {
       languages: ['json'],
       metadata: {},
     };
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async executeAllCells(
+    document: vscode.NotebookDocument,
+    _token: vscode.CancellationToken
+  ): Promise<void> {
+    for (let i = 0; i < document.cells.length; i++) {
+      await this.executeCell(document, document.cells[i]);
+    }
   }
 
   /**
