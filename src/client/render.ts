@@ -7,8 +7,15 @@
 // You can configure or change this in the webpack.config.js file.
 import * as style from './style.css';
 
+interface IRenderInfo {
+  container: HTMLElement;
+  mimeType: string;
+  data: any;
+  notebookApi: INotebookRendererApi<unknown>;
+}
+
 // This function is called to render your contents.
-export function render(container: HTMLElement, mimeType: string, data: any) {
+export function render({ container, mimeType, data }: IRenderInfo) {
   // Format the JSON and insert it as <pre><code>{ ... }</code></pre>
   // Replace this with your custom code!
   const pre = document.createElement('pre');

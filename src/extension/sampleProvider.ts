@@ -8,6 +8,14 @@ export class SampleProvider implements vscode.NotebookContentProvider {
   public readonly onDidChangeNotebook = new vscode.EventEmitter<vscode.NotebookDocumentEditEvent>()
     .event;
 
+  public readonly kernel: vscode.NotebookKernel = {
+    label: 'Default Kernel',
+    executeCell: (_document, cell) => this.executeCell(cell),
+    executeAllCells: async (document) => {
+      await Promise.all(document.cells.map((cell) => this.executeCell(cell)));
+    },
+  };
+
   /**
    * @inheritdoc
    */
@@ -27,13 +35,7 @@ export class SampleProvider implements vscode.NotebookContentProvider {
     };
   }
 
-  /**
-   * @inheritdoc
-   */
-  public async executeCell(
-    _document: vscode.NotebookDocument,
-    cell: vscode.NotebookCell | undefined,
-  ): Promise<void> {
+  private async executeCell(cell: vscode.NotebookCell | undefined): Promise<void> {
     if (cell?.language !== 'json') {
       return;
     }
