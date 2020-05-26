@@ -13,6 +13,15 @@ import errorOverlay from 'vscode-notebook-error-overlay';
 // rendering logic inside of the `render()` function.
 // ----------------------------------------------------------------------------
 
+const notebookApi = acquireNotebookRendererApi();
+
+// You can listen to an event that will fire right before cells unmount if
+// you need to do teardown:
+notebookApi.onWillUnmountCell((cellUri) => {
+  console.log(cellUri ? `Cell ${cellUri} will unmount` : 'All cells will be cleared');
+});
+
+notebookApi.onDidMountCell((element) => renderTag(element.querySelector('script')!));
 
 // Function to render your contents in a single tag, calls the `render()`
 // function from render.ts. Also catches and displays any thrown errors.
@@ -21,8 +30,9 @@ const renderTag = (tag: HTMLScriptElement) =>
     let container: HTMLElement;
 
     // Create an element to render in, or reuse a previous element.
-    if (tag.nextElementSibling instanceof HTMLElement) {
-      container = tag.nextElementSibling;
+    const maybeOldContainer = tag.previousElementSibling;
+    if (maybeOldContainer instanceof HTMLDivElement && maybeOldContainer.dataset.renderer) {
+      container = maybeOldContainer;
       container.innerHTML = '';
     } else {
       container = document.createElement('div');
@@ -30,11 +40,11 @@ const renderTag = (tag: HTMLScriptElement) =>
     }
 
     const mimeType = tag.dataset.mimeType as string;
-    render(container, mimeType, JSON.parse(tag.innerHTML));
+    render({ container, mimeType, data: JSON.parse(tag.innerHTML), notebookApi });
   });
 
 const renderAllTags = () => {
-  const nodeList = document.querySelectorAll(`script[type="renderer/${viewType}"]`);
+  const nodeList = document.querySelectorAll(`script[data-renderer="${viewType}"]`);
   for (let i = 0; i < nodeList.length; i++) {
     renderTag(nodeList[i] as HTMLScriptElement);
   }

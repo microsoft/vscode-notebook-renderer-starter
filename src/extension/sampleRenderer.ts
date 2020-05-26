@@ -2,10 +2,9 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { viewType, renderCallback } from '../common/constants';
 
-const onLoad = `(() => { debugger; window['${renderCallback}'] && window['${renderCallback}'](document.currentScript) })()`;
-
 export class SampleRenderer implements vscode.NotebookOutputRenderer {
   private hasOpenedDevTools = new WeakSet<vscode.NotebookDocument>();
+  private outputCounter = 0;
 
   public readonly preloads: vscode.Uri[] = [];
 
@@ -25,7 +24,11 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
   /**
    * Called to render a cell.
    */
-  public render(document: vscode.NotebookDocument, output: vscode.CellDisplayOutput, mimeType: string): string {
+  public render(
+    document: vscode.NotebookDocument,
+    output: vscode.CellDisplayOutput,
+    mimeType: string,
+  ): string {
     const renderData = output.data[mimeType];
     this.ensureDevTools(document);
 
@@ -33,7 +36,7 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
     // renderer client in its `online`. Its contents are are output data as JSON.
     // You could also preprocess your data before passing it to the client.
     return `
-      <script type="renderer/${viewType}" data-mime-type="${mimeType}" onload="${onLoad}">
+      <script data-renderer="${viewType}" data-mime-type="${mimeType}" type="application/json">
         ${JSON.stringify(renderData)}
       </script>
     `;
@@ -44,7 +47,10 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
    * Todo: unnecessary once https://github.com/microsoft/vscode/issues/96626
    */
   private async ensureDevTools(document: vscode.NotebookDocument) {
-    if (this.context.extensionMode === vscode.ExtensionMode.Development && !this.hasOpenedDevTools.has(document)) {
+    if (
+      this.context.extensionMode === vscode.ExtensionMode.Development &&
+      !this.hasOpenedDevTools.has(document)
+    ) {
       await vscode.commands.executeCommand('workbench.action.webview.openDeveloperTools');
       this.hasOpenedDevTools.add(document);
     }

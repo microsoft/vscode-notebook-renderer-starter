@@ -10,6 +10,14 @@ export class SampleProvider implements vscode.NotebookContentProvider, vscode.No
   public readonly onDidChangeNotebook = new vscode.EventEmitter<vscode.NotebookDocumentEditEvent>()
     .event;
 
+  public readonly kernel: vscode.NotebookKernel = {
+    label: 'Default Kernel',
+    executeCell: (_document, cell) => this.executeCell(cell),
+    executeAllCells: async (document) => {
+      await Promise.all(document.cells.map((cell) => this.executeCell(cell)));
+    },
+  };
+
   /**
    * @inheritdoc
    */
