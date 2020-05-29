@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { viewType } from '../common/constants';
+import { rendererType } from '../common/constants';
 import { SampleRenderer } from './sampleRenderer';
 import { SampleProvider } from './sampleProvider';
 
@@ -10,7 +10,7 @@ import { SampleProvider } from './sampleProvider';
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.notebook.registerNotebookOutputRenderer(
-			viewType,
+			rendererType,
 			{
 				type: 'display_data',
         // The list of mime types this renderer knows how to render. Should
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// todo: either flesh this out or remove from final version:
 		vscode.notebook.registerNotebookContentProvider(
-			viewType, new SampleProvider()
+			rendererType, new SampleProvider()
 		)
 	);
 }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { viewType, renderCallback } from '../common/constants';
+import { rendererType, renderCallback } from '../common/constants';
 
 export class SampleRenderer implements vscode.NotebookOutputRenderer {
   private hasOpenedDevTools = new WeakSet<vscode.NotebookDocument>();
@@ -36,7 +36,7 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
     // renderer client in its `online`. Its contents are are output data as JSON.
     // You could also preprocess your data before passing it to the client.
     return `
-      <script data-renderer="${viewType}" data-mime-type="${mimeType}" type="application/json">
+      <script data-renderer="${rendererType}" data-mime-type="${mimeType}" type="application/json">
         ${JSON.stringify(renderData)}
       </script>
     `;
