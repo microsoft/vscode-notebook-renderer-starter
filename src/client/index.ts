@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { viewType, renderCallback } from '../common/constants';
+import { rendererType, renderCallback } from '../common/constants';
 import { render } from './render';
 import errorOverlay from 'vscode-notebook-error-overlay';
 
@@ -13,15 +13,15 @@ import errorOverlay from 'vscode-notebook-error-overlay';
 // rendering logic inside of the `render()` function.
 // ----------------------------------------------------------------------------
 
-const notebookApi = acquireNotebookRendererApi();
+const notebookApi = acquireNotebookRendererApi(rendererType);
 
 // You can listen to an event that will fire right before cells unmount if
 // you need to do teardown:
-notebookApi.onWillUnmountCell((cellUri) => {
+notebookApi.onWillDestroyCell((cellUri) => {
   console.log(cellUri ? `Cell ${cellUri} will unmount` : 'All cells will be cleared');
 });
 
-notebookApi.onDidMountCell((element) => renderTag(element.querySelector('script')!));
+notebookApi.onDidCreateCell((element) => renderTag(element.querySelector('script')!));
 
 // Function to render your contents in a single tag, calls the `render()`
 // function from render.ts. Also catches and displays any thrown errors.
@@ -44,7 +44,7 @@ const renderTag = (tag: HTMLScriptElement) =>
   });
 
 const renderAllTags = () => {
-  const nodeList = document.querySelectorAll(`script[data-renderer="${viewType}"]`);
+  const nodeList = document.querySelectorAll(`script[data-renderer="${rendererType}"]`);
   for (let i = 0; i < nodeList.length; i++) {
     renderTag(nodeList[i] as HTMLScriptElement);
   }

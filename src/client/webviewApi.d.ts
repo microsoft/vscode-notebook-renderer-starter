@@ -16,12 +16,12 @@ declare global {
      * Fired before an ouput is destroyed, with its cell URI, or undefined if
      * all cells are about to unmount.
      */
-    onWillUnmountCell: Event<string | undefined>;
+    onWillDestroyCell: Event<string | undefined>;
 
     /**
      * Fired when a cell is mounted.
      */
-    onDidMountCell: Event<HTMLElement>;
+    onDidCreateCell: Event<HTMLElement>;
   }
 
   function acquireNotebookRendererApi<T = any>(rendererType?: string): INotebookRendererApi<T>;
