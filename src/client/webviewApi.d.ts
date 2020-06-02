@@ -24,5 +24,5 @@ declare global {
     onDidCreateCell: Event<HTMLElement>;
   }
 
-  function acquireNotebookRendererApi<T = any>(rendererType?: string): INotebookRendererApi<T>;
+  function acquireNotebookRendererApi<T = any>(rendererType: string): INotebookRendererApi<T>;
 }
