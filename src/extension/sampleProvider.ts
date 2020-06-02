@@ -12,9 +12,9 @@ export class SampleProvider implements vscode.NotebookContentProvider, vscode.No
 
   public readonly kernel: vscode.NotebookKernel = {
     label: 'Default Kernel',
-    executeCell: (_document, cell) => this.executeCell(cell),
+    executeCell: (document, cell) => this.executeCell(document, cell),
     executeAllCells: async (document) => {
-      await Promise.all(document.cells.map((cell) => this.executeCell(cell)));
+      await Promise.all(document.cells.map((cell) => this.executeCell(document, cell)));
     },
   };
 

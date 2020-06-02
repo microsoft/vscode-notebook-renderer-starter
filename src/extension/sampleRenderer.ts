@@ -8,16 +8,16 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
 
   public readonly preloads: vscode.Uri[] = [];
 
-  constructor(private readonly context: vscode.ExtensionContext) {
+  constructor(private readonly context: vscode.ExtensionContext, private readonly name: string) {
     // Set preloads to a list of scripts you want VS Code to load before your
     // renderer is ready. Here, we load the compiled Webpack bundle in 'release'
     // mode and load from the webpack-dev-server in development, which provides
     // hot reloading for easy development.
     const webpackDevServerPort = process.env.RENDERER_USE_WDS_PORT;
     if (webpackDevServerPort && context.extensionMode !== vscode.ExtensionMode.Release) {
-      this.preloads.push(vscode.Uri.parse(`http://localhost:${webpackDevServerPort}/index.js`));
+      this.preloads.push(vscode.Uri.parse(`http://localhost:${webpackDevServerPort}/index.js`).with({ query: name }));
     } else {
-      this.preloads.push(vscode.Uri.file(path.join(context.extensionPath, 'out/client/index.js')));
+      this.preloads.push(vscode.Uri.file(path.join(context.extensionPath, 'out/client/index.js')).with({ query: name }));
     }
   }
 
@@ -36,7 +36,8 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
     // renderer client in its `online`. Its contents are are output data as JSON.
     // You could also preprocess your data before passing it to the client.
     return `
-      <script data-renderer="${rendererType}" data-mime-type="${mimeType}" type="application/json">
+      <h1>${this.name}</h1>
+      <script data-renderer="${this.name}" data-mime-type="${mimeType}" type="application/json">
         ${JSON.stringify(renderData)}
       </script>
     `;

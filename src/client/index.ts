@@ -2,9 +2,10 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { rendererType, renderCallback } from '../common/constants';
 import { render } from './render';
 import errorOverlay from 'vscode-notebook-error-overlay';
+
+const rendererType = new URL((document.currentScript as HTMLScriptElement).src).search.slice(1);
 
 // ----------------------------------------------------------------------------
 // This is the entrypoint to the notebook renderer's webview client-side code.
@@ -18,10 +19,13 @@ const notebookApi = acquireNotebookRendererApi(rendererType);
 // You can listen to an event that will fire right before cells unmount if
 // you need to do teardown:
 notebookApi.onWillDestroyCell((cellUri) => {
-  console.log(cellUri ? `Cell ${cellUri} will unmount` : 'All cells will be cleared');
+  console.log(`[${rendererType}]:`, cellUri ? `Cell ${cellUri} will unmount` : 'All cells will be cleared');
 });
 
-notebookApi.onDidCreateCell((element) => renderTag(element.querySelector('script')!));
+notebookApi.onDidCreateCell((element) => {
+  console.log(`[${rendererType}]:`, 'rendering tag', element);
+  renderTag(element.querySelector('script')!);
+});
 
 // Function to render your contents in a single tag, calls the `render()`
 // function from render.ts. Also catches and displays any thrown errors.
@@ -63,7 +67,6 @@ const getPublicPath = () => {
 
 __webpack_public_path__ = getPublicPath();
 
-Object.assign(window, { [renderCallback]: renderTag });
 renderAllTags();
 
 // When the module is hot-reloaded, rerender all tags. Webpack will update

@@ -10,14 +10,25 @@ import { SampleProvider } from './sampleProvider';
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.notebook.registerNotebookOutputRenderer(
-			rendererType,
+			`${rendererType}1`,
 			{
 				type: 'display_data',
         // The list of mime types this renderer knows how to render. Should
         // match those registered in your package.json:
 				subTypes: ['application/json'],
 			},
-			new SampleRenderer(context),
+			new SampleRenderer(context, `${rendererType}1`),
+		),
+
+		vscode.notebook.registerNotebookOutputRenderer(
+			`${rendererType}2`,
+			{
+				type: 'display_data',
+        // The list of mime types this renderer knows how to render. Should
+        // match those registered in your package.json:
+				subTypes: ['application/json'],
+			},
+			new SampleRenderer(context, `${rendererType}2`),
 		),
 
 		// todo: either flesh this out or remove from final version:

@@ -17,8 +17,15 @@
   "contributes": {
     "notebookOutputRenderer": [
       {
-        "viewType": "sample-notebook-renderer",
-        "displayName": "Sample Notebook Renderer",
+        "viewType": "sample-notebook-renderer1",
+        "displayName": "Sample Notebook Renderer 1",
+        "mimeTypes": [
+          "application/json"
+        ]
+      },
+      {
+        "viewType": "sample-notebook-renderer2",
+        "displayName": "Sample Notebook Renderer 2",
         "mimeTypes": [
           "application/json"
         ]
