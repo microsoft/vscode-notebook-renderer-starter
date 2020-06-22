@@ -15,7 +15,7 @@ interface IRenderInfo {
 }
 
 // This function is called to render your contents.
-export function render({ container, mimeType, data }: IRenderInfo) {
+export function render({ container, mimeType, data, notebookApi }: IRenderInfo) {
   // Format the JSON and insert it as <pre><code>{ ... }</code></pre>
   // Replace this with your custom code!
   const pre = document.createElement('pre');
@@ -24,6 +24,19 @@ export function render({ container, mimeType, data }: IRenderInfo) {
   code.textContent = `mime type: ${mimeType}\n\n${JSON.stringify(data, null, 2)}`;
   pre.appendChild(code);
   container.appendChild(pre);
+
+  const button = document.createElement('button');
+  button.innerText = 'Test';
+
+  button.addEventListener('click', () => {
+    notebookApi.postMessage('ping');
+  });
+
+  container.appendChild(button);
+
+  notebookApi.onDidReceiveMessage(msg => {
+    console.log('got a message from the extension', msg);
+  });
 }
 
 if (module.hot) {

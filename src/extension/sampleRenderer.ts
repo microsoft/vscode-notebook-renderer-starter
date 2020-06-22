@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { rendererType, renderCallback } from '../common/constants';
+import { rendererType } from '../common/constants';
 
 export class SampleRenderer implements vscode.NotebookOutputRenderer {
   private hasOpenedDevTools = new WeakSet<vscode.NotebookDocument>();
-  private outputCounter = 0;
 
   public readonly preloads: vscode.Uri[] = [];
 
@@ -14,7 +13,7 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
     // mode and load from the webpack-dev-server in development, which provides
     // hot reloading for easy development.
     const webpackDevServerPort = process.env.RENDERER_USE_WDS_PORT;
-    if (webpackDevServerPort && context.extensionMode !== vscode.ExtensionMode.Release) {
+    if (webpackDevServerPort && context.extensionMode !== vscode.ExtensionMode.Production) {
       this.preloads.push(vscode.Uri.parse(`http://localhost:${webpackDevServerPort}/index.js`));
     } else {
       this.preloads.push(vscode.Uri.file(path.join(context.extensionPath, 'out/client/index.js')));
@@ -26,8 +25,7 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
    */
   public render(
     document: vscode.NotebookDocument,
-    output: vscode.CellDisplayOutput,
-    mimeType: string,
+    { output, mimeType }: vscode.NotebookRenderRequest,
   ): string {
     const renderData = output.data[mimeType];
     this.ensureDevTools(document);
@@ -40,6 +38,20 @@ export class SampleRenderer implements vscode.NotebookOutputRenderer {
         ${JSON.stringify(renderData)}
       </script>
     `;
+  }
+
+  /**
+   * This is called whenever we get a new editor for a notebook. Bear in mind
+   * that you can have multiple editors (and webviews!) for a single notebook
+   * if the user splits the frame.
+   */
+  public resolveNotebook(document: vscode.NotebookDocument, communication: vscode.NotebookCommunication) {
+    // communication.onDidReceiveMessage is called whenever `postMessage` on
+    // the notebook API is called in the webview.
+    communication.onDidReceiveMessage(message => {
+      // Here we will just echo the message back to the webview.
+      communication.postMessage(message);
+    });
   }
 
   /**

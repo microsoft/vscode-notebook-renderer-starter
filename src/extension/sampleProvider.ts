@@ -21,6 +21,20 @@ export class SampleProvider implements vscode.NotebookContentProvider, vscode.No
   /**
    * @inheritdoc
    */
+  public resolveNotebook() {
+    return Promise.resolve();
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async backupNotebook() {
+    return { id: '', delete: () => undefined };
+  }
+
+  /**
+   * @inheritdoc
+   */
   public async openNotebook(): Promise<vscode.NotebookData> {
     return {
       cells: [

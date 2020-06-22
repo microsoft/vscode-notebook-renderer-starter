@@ -17,11 +17,11 @@ const notebookApi = acquireNotebookRendererApi(rendererType);
 
 // You can listen to an event that will fire right before cells unmount if
 // you need to do teardown:
-notebookApi.onWillDestroyCell((cellUri) => {
+notebookApi.onWillDestroyOutput((cellUri) => {
   console.log(cellUri ? `Cell ${cellUri} will unmount` : 'All cells will be cleared');
 });
 
-notebookApi.onDidCreateCell((element) => renderTag(element.querySelector('script')!));
+notebookApi.onDidCreateOutput(({ element }) => renderTag(element.querySelector('script')!));
 
 // Function to render your contents in a single tag, calls the `render()`
 // function from render.ts. Also catches and displays any thrown errors.
