@@ -5,7 +5,8 @@
     "noEmit": true,
     "rootDir": ".",
     "module": "esnext",
-    "lib": ["ES2019", "dom"]
+    "lib": ["ES2019", "dom"],
+    "types": ["vscode-notebook-renderer", "webpack-env"]
   },
   "references": [
     {
