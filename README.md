@@ -1,3 +1,10 @@
+# Use the VS Code yeoman generators instead
+
+This repo is no longer updated. Instead, generator your own project via:
+
+1. `npm install -g generator-code`
+1. `yo code --insiders` and choosing Notebook Renderer
+
 # vscode-notebook-renderer-starter
 
 ⚠️ Work-in-progress starter code for custom notebook renderers in VS Code. Expect this to change as notebooks matures. ⚠️
